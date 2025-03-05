@@ -10,4 +10,30 @@ describe('TodoListManager', () => {
     expect(getByTestId('add-todo-button')).toBeTruthy();
   });
 
+  it('adds a new todo to the list', () => {
+    const { getByTestId, getByPlaceholderText, getByText } = render(<TodoListManager />);
+    
+    const input = getByPlaceholderText('Enter Todo');
+    const addButton = getByTestId('add-todo-button');
+    
+    fireEvent.changeText(input, 'Test Todo');
+    fireEvent.press(addButton);
+    
+    expect(getByText('Test Todo')).toBeTruthy();
+  });
+
+  it('removes a todo from the list', () => {
+    const { getByTestId, getByPlaceholderText, queryByText } = render(<TodoListManager />);
+    
+    const input = getByPlaceholderText('Enter Todo');
+    const addButton = getByTestId('add-todo-button');
+    
+    fireEvent.changeText(input, 'Test Todo');
+    fireEvent.press(addButton);
+    
+    const removeButton = getByTestId(/remove-todo-button-\d+/);
+    
+    fireEvent.press(removeButton);
+    expect(queryByText('Test Todo')).toBeNull();
+  });
 });
